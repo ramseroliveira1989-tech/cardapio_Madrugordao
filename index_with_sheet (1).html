@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MADRUGORDÃO BARRA DO GARÇAS — Cardápio</title>
+  <style>
+    :root{
+      --orange:#f97316;   /* laranja principal */
+      --orange-strong:#ff7a00;/* destaque */
+      --yellow:#fde047;   /* amarelo */
+      --black:#111827;    /* quase preto */
+      --bg:#0b0b0e;       /* fundo geral */
+      --white:#ffffff;
+      --lettuce:#22c55e;  /* verde alface */
+      --cream:#fff7ed;    /* fundo cartões */
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,'Noto Sans',sans-serif}
+    header{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--orange-strong),var(--orange));color:#000;padding:.8rem 1rem;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+    .brand{display:flex;align-items:center;gap:.75rem;max-width:1200px;margin:0 auto}
+    .brand h1{margin:0;font-size:1.15rem;letter-spacing:.5px;font-weight:900;color:#111}
+    .brand .logo{width:56px;height:56px;border-radius:12px;object-fit:cover;background:#fff;padding:4px;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+    .chip{background:var(--yellow);color:#111;padding:.125rem .5rem;border-radius:999px;font-size:.75rem;font-weight:800}
+    .container{max-width:1200px;margin:1rem auto;padding:0 1rem;display:grid;grid-template-columns:1fr 380px;gap:1rem}
+    @media (max-width: 990px){.container{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    .card .header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px dashed rgba(255,255,255,.1)}
+    .card .content{padding:1rem}
+    /* Tabs em laranja com texto preto */
+    .tabs{display:flex;gap:.6rem;flex-wrap:wrap}
+    .tab{cursor:pointer;background:var(--orange);color:#111;border:2px solid var(--orange-strong);padding:.7rem 1rem;border-radius:999px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;box-shadow:0 6px 14px rgba(0,0,0,.25)}
+    .tab:hover{background:var(--orange-strong)}
+    .tab.active{background:var(--orange-strong);color:#111;border-color:var(--orange-strong);transform:translateY(-1px)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+    @media (max-width: 1100px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width: 620px){.grid{grid-template-columns:1fr}}
+    .item{background:var(--cream);color:#111;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:260px;position:relative}
+    .item .thumb{height:140px;background:linear-gradient(90deg,var(--orange),var(--yellow));display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .item .body{padding:.9rem;display:flex;flex-direction:column;gap:.4rem}
+    .item .title{font-weight:900}
+    .item .desc{font-size:.9rem;color:#374151}
+    .item .bottom{margin-top:auto;display:flex;align-items:center;justify-content:space-between}
+    .price{font-weight:900;color:var(--orange-strong)}
+    .btn{border:0;cursor:pointer;border-radius:12px;font-weight:800}
+    .btn.primary{background:linear-gradient(90deg,var(--orange-strong),var(--orange));color:#111;padding:.55rem .8rem}
+    .builder{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+    @media (max-width: 700px){.builder{grid-template-columns:1fr}}
+    .group{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:.8rem}
+    .group h4{margin:.1rem 0 .6rem;font-size:.95rem;letter-spacing:.2px}
+    .options{display:flex;flex-wrap:wrap;gap:.45rem}
+    .pill{display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:.35rem .6rem;cursor:pointer}
+    .pill input{accent-color:var(--orange)}
+    .cart{position:sticky;top:82px}
+    .cart .line{display:flex;gap:.6rem;align-items:center;justify-content:space-between;padding:.5rem .6rem;background:rgba(255,255,255,.04);border-radius:10px;border:1px solid rgba(255,255,255,.08)}
+    .qty{display:flex;align-items:center;gap:.35rem}
+    .qty button{width:28px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--white);cursor:pointer}
+    .total{display:flex;align-items:center;justify-content:space-between;font-weight:900;font-size:1.15rem;margin-top:.5rem}
+    form.checkout{display:grid;gap:.6rem;margin-top:.8rem}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+    @media (max-width:700px){.row{grid-template-columns:1fr}}
+    .field{display:flex;flex-direction:column;gap:.25rem}
+    label{font-size:.85rem;color:#d1d5db}
+    input,select,textarea{background:#0f172a;color:var(--white);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.6rem}
+    textarea{min-height:70px}
+    .cta{margin-top:.8rem;display:flex;flex-direction:column;gap:.5rem}
+    .cta .whats{background:linear-gradient(90deg,#25D366,var(--lettuce));color:#0d1b12;padding:.8rem;border-radius:14px;border:0;font-weight:900;cursor:pointer}
+    footer{max-width:1200px;margin:1rem auto 2rem;padding:0 1rem;color:#9ca3af;font-size:.85rem}
+    .legend{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.4rem}
+    .legend .dot{width:10px;height:10px;border-radius:999px;display:inline-block;vertical-align:middle;margin-right:.35rem}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img class="logo" src="data:image/jpeg;base64,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" alt="MADRUGORDÃO BARRA DO GARÇAS"/>
+      <h1>MADRUGORDÃO BARRA DO GARÇAS</h1>
+      <span class="chip">Entrega grátis em bairros selecionados</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="card">
+      <div class="header">
+        <strong style="font-size:1.05rem">Cardápio</strong>
+        <nav class="tabs" id="tabs"></nav>
+      </div>
+      <div class="content" id="lists"></div>
+
+      <div class="header">
+        <strong style="font-size:1.05rem">Monte seu Madrugordão</strong>
+        <span class="chip">Personalize do seu jeito</span>
+      </div>
+      <div class="content">
+        <div class="builder" id="builder"></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:.8rem">
+          <button class="btn primary" id="addCustom">Adicionar ao carrinho</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="card cart">
+      <div class="header">
+        <strong>Carrinho</strong>
+        <span class="chip" id="itemsCount">0 itens</span>
+      </div>
+      <div class="content" id="cart"></div>
+      <div class="content" style="border-top:1px dashed rgba(255,255,255,.1)">
+        <div class="total"><span>Total</span><span id="total">R$ 0,00</span></div>
+        <form class="checkout" id="checkout">
+          <div class="row">
+            <div class="field"><label>Nome</label><input required name="nome" placeholder="Seu nome"/></div>
+            <div class="field"><label>Telefone</label><input name="telefone" placeholder="(66) 9 0000-0000"/></div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Entrega ou retirada</label>
+              <select name="modo" id="modo">
+                <option value="Entrega">Entrega</option>
+                <option value="Retirada">Retirada no local</option>
+              </select>
+            </div>
+            <div class="field"><label>Forma de pagamento</label>
+              <select name="pagamento">
+                <option>Pix</option>
+                <option>Cartão</option>
+                <option>Dinheiro</option>
+              </select>
+            </div>
+          </div>
+          <div class="field" id="enderecoBox"><label>Endereço (rua, número, bairro, ref.)</label><textarea name="endereco" placeholder="Ex.: Av. X, 123, Centro, perto da praça"></textarea></div>
+          <div class="field" id="trocoBox" style="display:none"><label>Troco para quanto?</label><input name="troco" placeholder="Opcional"/></div>
+          <div class="cta">
+            <button type="submit" class="whats">Enviar pedido pelo WhatsApp</button>
+            <div class="guarantee" style="font-size:.8rem;color:#9ca3af;text-align:center">Você será redirecionado ao WhatsApp com todas as informações preenchidas. Confira antes de enviar. 🍟🥤</div>
+          </div>
+        </form>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    <div>Paleta:
+      <div class="legend">
+        <span><i class="dot" style="background:var(--orange)"></i> Laranja</span>
+        <span><i class="dot" style="background:var(--yellow)"></i> Amarelo</span>
+        <span><i class="dot" style="background:var(--black)"></i> Preto</span>
+        <span><i class="dot" style="background:var(--lettuce)"></i> Verde</span>
+        <span><i class="dot" style="background:var(--white);border:1px solid #ddd"></i> Branco</span>
+      </div>
+    </div>
+    <div style="margin-top:.25rem;color:#9ca3af;font-size:.75rem">Versão gerada: 2025-08-12 21:21:45 UTC</div>
+  </footer>
+
+  <script>
+    // ==================== CONFIG ====================
+    const WHATSAPP_NUMBER = '5566992470493';
+    // === Webhook da planilha (Google Apps Script) ===
+    // Preencha com a URL que o Apps Script gerar e defina uma chave secreta:
+    const SHEET_WEBHOOK = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+    const SHEET_SECRET  = 'TROQUE_POR_UMA_CHAVE_SECRETA';
+
+    // ==================== CATÁLOGO ====================
+    const catalog = {
+      Lanches: [
+        {id:'madrugordao', title:'Madrugordão', desc:'Pão, 2 carnes 100g, bacon, cheddar duplo, ovo, alface, tomate, molho da casa.', price: 28.9},
+        {id:'big-bacon', title:'Big Bacon', desc:'Carne 150g, bacon crocante, queijo, maionese verde.', price: 24.9},
+        {id:'x-salada', title:'X-Salada', desc:'Carne 100g, queijo, alface, tomate e maionese.', price: 18.9},
+      ],
+      Bebidas: [
+        {id:'guarana-1l', title:'Guaraná 1L', desc:'Garrafão gelado', price: 9.9},
+        {id:'refri-lata', title:'Refrigerante Lata', desc:'Coca/Guaraná/Fanta (consulte sabores)', price: 6.0},
+        {id:'agua', title:'Água 500ml', desc:'Sem gás', price: 3.5},
+      ],
+      Porções: [
+        {id:'batata-p', title:'Batata P 250g', desc:'Batata palito crocante', price: 12.9},
+        {id:'batata-g', title:'Batata G 500g', desc:'Serve 2-3 pessoas', price: 19.9},
+        {id:'nuggets', title:'Nuggets 10un', desc:'Frango empanado', price: 17.9},
+      ]
+    };
+
+    // ==================== BUILDER ====================
+    const builder = {
+      base:{ label:'Hambúrguer', type:'radio', required:true, options:[
+        {id:'burger70', name:'Hambúrguer 70g', price:10.0}
+      ]},
+      pao:{ label:'Pão', type:'radio', required:true, options:[
+        {id:'tradicional', name:'Tradicional', price:0}
+      ]},
+      opcionais:{ label:'Opcionais', type:'checkbox', options:[
+        {id:'abacaxi', name:'Abacaxi', price:3.0},
+        {id:'bacon', name:'Bacon', price:5.0},
+        {id:'calabresa', name:'Calabresa', price:4.0},
+        {id:'ovo', name:'Ovo', price:3.0},
+        {id:'salsicha', name:'Salsicha', price:3.0},
+        {id:'tomate', name:'Tomate', price:0},
+        {id:'cebola', name:'Cebola', price:0},
+        {id:'cebolacaram', name:'Cebola caramelizada', price:2.0},
+        {id:'presunto', name:'Presunto', price:3.0},
+        {id:'docedeleite', name:'Doce de leite', price:3.0},
+      ]}
+    };
+
+    // ==================== ESTADO ====================
+    const state = {cart:[], tab:Object.keys(catalog)[0]};
+
+    // ==================== TABS ====================
+    const tabsEl = document.getElementById('tabs');
+    function renderTabs(){
+      tabsEl.innerHTML = '';
+      Object.keys(catalog).forEach(key=>{
+        const b = document.createElement('button');
+        b.className = 'tab' + (state.tab===key?' active':'');
+        b.textContent = key.toUpperCase();
+        b.addEventListener('click',()=>{state.tab=key;renderLists();renderTabs()});
+        tabsEl.appendChild(b);
+      })
+    }
+
+    // ==================== LISTA ====================
+    const listsEl = document.getElementById('lists');
+    function money(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+    function renderLists(){
+      listsEl.innerHTML = '';
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      catalog[state.tab].forEach(p=>{
+        const card = document.createElement('div'); card.className='item';
+        card.innerHTML = `
+          <div class="thumb"><span style="font-size:42px">🍔</span></div>
+          <div class="body">
+            <div class="title">${p.title}</div>
+            <div class="desc">${p.desc}</div>
+            <div class="bottom">
+              <div class="price">${money(p.price)}</div>
+              <button class="btn primary">Adicionar</button>
+            </div>
+          </div>`;
+        card.querySelector('button').addEventListener('click',()=>addToCart({id:p.id,title:p.title,price:p.price,qty:1,notes:''}))
+        grid.appendChild(card);
+      });
+      listsEl.appendChild(grid);
+    }
+
+    // ==================== BUILDER RENDER ====================
+    const builderEl = document.getElementById('builder');
+    function renderBuilder(){
+      builderEl.innerHTML = '';
+      Object.entries(builder).forEach(([key,conf])=>{
+        const box = document.createElement('div'); box.className='group';
+        box.innerHTML = `<h4>${conf.label}</h4>`;
+        const wrap = document.createElement('div'); wrap.className='options';
+        conf.options.forEach(opt=>{
+          const id = key+'_'+opt.id;
+          const pill = document.createElement('label'); pill.className='pill';
+          pill.innerHTML = `<input ${conf.type==='checkbox'?'type="checkbox"':'type="radio" name="'+key+'"' } id="${id}" value="${opt.name}" data-price="${opt.price}"> ${opt.name} ${opt.price?`<small style="opacity:.7">(+ ${money(opt.price)})</small>`:''}`;
+          wrap.appendChild(pill);
+        });
+        box.appendChild(wrap); builderEl.appendChild(box);
+      });
+    }
+
+    // ==================== CARRINHO ====================
+    const cartEl = document.getElementById('cart');
+    const totalEl = document.getElementById('total');
+    const itemsCountEl = document.getElementById('itemsCount');
+    function addToCart(item){ const exist = state.cart.find(x=>x.title===item.title && JSON.stringify(x.options||[])===JSON.stringify(item.options||[])); if(exist){exist.qty += item.qty} else state.cart.push(item); renderCart(); window.scrollTo({top:0,behavior:'smooth'});}
+    function changeQty(index,delta){ const it = state.cart[index]; it.qty += delta; if(it.qty<=0) state.cart.splice(index,1); renderCart(); }
+    window.changeQty = changeQty;
+    function renderCart(){
+      cartEl.innerHTML=''; let total=0;
+      state.cart.forEach((it,idx)=>{
+        const line = document.createElement('div'); line.className='line';
+        const optionsText = it.options?.length ? `\n— ${it.options.map(o=>o.name).join(', ')}` : '';
+        line.innerHTML = `
+          <div style="flex:1">
+            <div style="font-weight:800">${it.title}</div>
+            <div style="font-size:.85rem;color:#d1d5db;white-space:pre-line">${optionsText}</div>
+          </div>
+          <div class="qty">
+            <button aria-label="diminuir" onclick="changeQty(${idx},-1)">−</button>
+            <span>${it.qty}</span>
+            <button aria-label="aumentar" onclick="changeQty(${idx},1)">+</button>
+          </div>
+          <div style="font-weight:800">${money(it.price*it.qty)}</div>`;
+        total += it.price*it.qty; cartEl.appendChild(line);
+      });
+      totalEl.textContent = money(total);
+      itemsCountEl.textContent = `${state.cart.length} ${state.cart.length===1?'item':'itens'}`;
+    }
+
+    // ==================== BOTÃO ADICIONAR DO BUILDER ====================
+    document.getElementById('addCustom').addEventListener('click',()=>{
+      const chosen={};
+      for(const key of ['base','pao']){
+        const r = document.querySelector(`input[name=${key}]:checked`);
+        if(!r){alert('Selecione: '+builder[key].label);return}
+        chosen[key] = {name:r.value, price: Number(r.dataset.price)};
+      }
+      const checkList = ['opcionais'].flatMap(key=>
+        [...document.querySelectorAll(`#builder input[id^=${key}_]:checked`)].map(i=>({group:key,name:i.value, price:Number(i.dataset.price)}))
+      );
+      const options = [chosen.base, chosen.pao, ...checkList];
+      const price = options.reduce((s,o)=>s+o.price,0);
+      addToCart({id:'custom', title:'Madrugordão Personalizado', price, qty:1, options});
+    });
+
+    // ==================== CHECKOUT / WHATSAPP ====================
+    const checkout = document.getElementById('checkout');
+    const modoSel = document.getElementById('modo');
+    const enderecoBox = document.getElementById('enderecoBox');
+    const trocoBox = document.getElementById('trocoBox');
+    modoSel.addEventListener('change',()=>{enderecoBox.style.display = modoSel.value==='Entrega' ? 'block':'none';})
+    checkout.pagamento?.addEventListener('change',()=>{trocoBox.style.display = checkout.pagamento.value==='Dinheiro' ? 'block':'none';})
+
+    checkout.addEventListener('submit',(e)=>{
+      e.preventDefault();
+      if(state.cart.length===0){alert('Seu carrinho está vazio. Adicione itens antes de finalizar.');return}
+      const data = Object.fromEntries(new FormData(checkout).entries());
+
+      const linhas = [];
+      linhas.push('*MADRUGORDÃO BARRA DO GARÇAS — Novo Pedido*'); linhas.push('');
+      state.cart.forEach((it,i)=>{ const opt = it.options?.length?`\n  • ${it.options.map(o=>o.name).join(', ')}`:'';
+        linhas.push(`${i+1}) ${it.qty}x ${it.title} — ${money(it.price*it.qty)}${opt}`); });
+      const total = document.getElementById('total').textContent; linhas.push(''); linhas.push(`*Total:* ${total}`); linhas.push('');
+      linhas.push(`*Nome:* ${data.nome||''}`); if(data.telefone) linhas.push(`*Telefone:* ${data.telefone}`);
+      linhas.push(`*Modo:* ${data.modo}`); if(data.modo==='Entrega' && data.endereco) linhas.push(`*Endereço:* ${data.endereco}`);
+      linhas.push(`*Pagamento:* ${data.pagamento}`); if(data.pagamento==='Dinheiro' && data.troco) linhas.push(`*Troco para:* ${data.troco}`);
+      linhas.push(''); linhas.push('Aguardando confirmação ✅');
+
+      // ===== Envia também para a planilha (não bloqueia o WhatsApp) =====
+      try {
+        const itensTexto = state.cart.map((it,i)=>{
+          const opt = it.options?.length ? ` • ${it.options.map(o=>o.name).join(', ')}` : '';
+          return `${i+1}) ${it.qty}x ${it.title}${opt} — ${money(it.price*it.qty)}`;
+        }).join('\n');
+        const payload = {
+          secret: SHEET_SECRET,
+          nome: data.nome || '',
+          telefone: data.telefone || '',
+          modo: data.modo,
+          endereco: data.modo==='Entrega' ? (data.endereco || '') : '',
+          pagamento: data.pagamento,
+          troco: data.pagamento==='Dinheiro' ? (data.troco || '') : '',
+          itensTexto,
+          total,
+          cart: state.cart
+        };
+        fetch(SHEET_WEBHOOK, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      } catch(err) { /* ignora erros */ }
+
+      const text = encodeURIComponent(linhas.join('\n'));
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+      window.open(url,'_blank');
+    });
+
+    // INIT
+    renderTabs(); renderLists(); renderBuilder(); renderCart();
+  </script>
+</body>
+</html>
