@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Madrugordão Lanches — Cardápio</title>
+  <!-- Paleta baseada nas imagens: laranja, amarelo, preto, branco e verde alface -->
+  <style>
+    :root{
+      --orange:#f97316;   /* laranja principal */
+      --orange-strong:#ff7a00;/* destaque */
+      --yellow:#fde047;   /* amarelo */
+      --black:#111827;    /* quase preto */
+      --gray:#374151;     /* cinza escuro */
+      --bg:#0b0b0e;       /* fundo geral */
+      --white:#ffffff;
+      --lettuce:#22c55e;  /* verde alface */
+      --cream:#fff7ed;    /* fundo cartões */
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+
+    /* Layout */
+    header{
+      position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--orange-strong),var(--orange));
+      color:#000;padding:.8rem 1rem;box-shadow:0 8px 24px rgba(0,0,0,.25)
+    }
+    .brand{display:flex;align-items:center;gap:.75rem;max-width:1200px;margin:0 auto}
+    .brand h1{margin:0;font-size:1.3rem;letter-spacing:.5px;font-weight:900;color:#111}
+    .chip{background:var(--yellow);color:#111;padding:.125rem .5rem;border-radius:999px;font-size:.75rem;font-weight:800}
+
+    .container{max-width:1200px;margin:1rem auto;padding:0 1rem;display:grid;grid-template-columns:1fr 380px;gap:1rem}
+    @media (max-width: 990px){.container{grid-template-columns:1fr}}
+
+    /* Cards */
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    .card .header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px dashed rgba(255,255,255,.1)}
+    .card .content{padding:1rem}
+
+    /* Tabs */
+    .tabs{display:flex;gap:.5rem;flex-wrap:wrap}
+    .tab{cursor:pointer;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);padding:.55rem .9rem;border-radius:999px;font-weight:700}
+    .tab.active{background:linear-gradient(90deg,var(--yellow),var(--orange));color:#111;border-color:transparent}
+
+    /* Grid de produtos */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+    @media (max-width: 1100px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width: 620px){.grid{grid-template-columns:1fr}}
+
+    .item{background:var(--cream);color:#111;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:260px;position:relative}
+    .item .thumb{height:140px;background:linear-gradient(90deg,var(--orange),var(--yellow));display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .item .thumb img{width:100%;height:100%;object-fit:cover}
+    .item .body{padding:.9rem;display:flex;flex-direction:column;gap:.4rem}
+    .item .title{font-weight:900}
+    .item .desc{font-size:.9rem;color:#374151}
+    .item .bottom{margin-top:auto;display:flex;align-items:center;justify-content:space-between}
+    .price{font-weight:900;color:var(--orange-strong)}
+    .btn{border:0;cursor:pointer;border-radius:12px;font-weight:800}
+    .btn.primary{background:linear-gradient(90deg,var(--orange-strong),var(--orange));color:#111;padding:.55rem .8rem}
+    .btn.ghost{background:transparent;border:2px solid var(--orange);color:var(--orange);padding:.45rem .7rem}
+
+    /* Builder */
+    .builder{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+    @media (max-width: 700px){.builder{grid-template-columns:1fr}}
+    .group{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:.8rem}
+    .group h4{margin:.1rem 0 .6rem;font-size:.95rem;letter-spacing:.2px}
+    .options{display:flex;flex-wrap:wrap;gap:.45rem}
+    .pill{display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:.35rem .6rem;cursor:pointer}
+    .pill input{accent-color:var(--orange)}
+
+    /* Carrinho */
+    .cart{position:sticky;top:82px}
+    .cart .line{display:flex;gap:.6rem;align-items:center;justify-content:space-between;padding:.5rem .6rem;background:rgba(255,255,255,.04);border-radius:10px;border:1px solid rgba(255,255,255,.08)}
+    .qty{display:flex;align-items:center;gap:.35rem}
+    .qty button{width:28px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--white);cursor:pointer}
+    .total{display:flex;align-items:center;justify-content:space-between;font-weight:900;font-size:1.15rem;margin-top:.5rem}
+
+    /* Checkout */
+    form.checkout{display:grid;gap:.6rem;margin-top:.8rem}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+    @media (max-width:700px){.row{grid-template-columns:1fr}}
+    .field{display:flex;flex-direction:column;gap:.25rem}
+    label{font-size:.85rem;color:#d1d5db}
+    input,select,textarea{background:#0f172a;color:var(--white);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.6rem}
+    textarea{min-height:70px}
+
+    .cta{margin-top:.8rem;display:flex;flex-direction:column;gap:.5rem}
+    .cta .whats{background:linear-gradient(90deg,#25D366,var(--lettuce));color:#0d1b12;padding:.8rem;border-radius:14px;border:0;font-weight:900;cursor:pointer}
+    .guarantee{font-size:.8rem;color:#9ca3af;text-align:center}
+
+    /* Footer */
+    footer{max-width:1200px;margin:1rem auto 2rem;padding:0 1rem;color:#9ca3af;font-size:.85rem}
+    .legend{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.4rem}
+    .legend .dot{width:10px;height:10px;border-radius:999px;display:inline-block;vertical-align:middle;margin-right:.35rem}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div style="width:40px;height:40px;border-radius:12px;background:var(--yellow);display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.25);font-weight:900">🍔</div>
+      <h1>Madrugordão Lanches</h1>
+      <span class="chip">Entrega grátis em bairros selecionados</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- COLUNA ESQUERDA -->
+    <section class="card">
+      <div class="header">
+        <strong style="font-size:1.05rem">Cardápio</strong>
+        <nav class="tabs" id="tabs"></nav>
+      </div>
+      <div class="content" id="lists">
+        <!-- listas renderizadas via JS -->
+      </div>
+
+      <div class="header">
+        <strong style="font-size:1.05rem">Monte seu Madrugordão</strong>
+        <span class="chip">Personalize do seu jeito</span>
+      </div>
+      <div class="content">
+        <div class="builder" id="builder">
+          <!-- opções via JS -->
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:.8rem">
+          <button class="btn primary" id="addCustom">Adicionar ao carrinho</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLUNA DIREITA / CARRINHO -->
+    <aside class="card cart">
+      <div class="header">
+        <strong>Carrinho</strong>
+        <span class="chip" id="itemsCount">0 itens</span>
+      </div>
+      <div class="content" id="cart"></div>
+      <div class="content" style="border-top:1px dashed rgba(255,255,255,.1)">
+        <div class="total"><span>Total</span><span id="total">R$ 0,00</span></div>
+        <form class="checkout" id="checkout">
+          <div class="row">
+            <div class="field"><label>Nome</label><input required name="nome" placeholder="Seu nome"/></div>
+            <div class="field"><label>Telefone</label><input name="telefone" placeholder="(66) 9 0000-0000"/></div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Entrega ou retirada</label>
+              <select name="modo" id="modo">
+                <option value="Entrega">Entrega</option>
+                <option value="Retirada">Retirada no local</option>
+              </select>
+            </div>
+            <div class="field"><label>Forma de pagamento</label>
+              <select name="pagamento">
+                <option>Pix</option>
+                <option>Cartão</option>
+                <option>Dinheiro</option>
+              </select>
+            </div>
+          </div>
+          <div class="field" id="enderecoBox"><label>Endereço (rua, número, bairro, ref.)</label><textarea name="endereco" placeholder="Ex.: Av. X, 123, Centro, perto da praça"></textarea></div>
+          <div class="field" id="trocoBox" style="display:none"><label>Troco para quanto?</label><input name="troco" placeholder="Opcional"/></div>
+          <div class="cta">
+            <button type="submit" class="whats">Enviar pedido pelo WhatsApp</button>
+            <div class="guarantee">Você será redirecionado ao WhatsApp com todas as informações preenchidas. Confira antes de enviar. 🍟🥤</div>
+          </div>
+        </form>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    <div>Paleta:
+      <div class="legend">
+        <span><i class="dot" style="background:var(--orange)"></i> Laranja</span>
+        <span><i class="dot" style="background:var(--yellow)"></i> Amarelo</span>
+        <span><i class="dot" style="background:var(--black)"></i> Preto</span>
+        <span><i class="dot" style="background:var(--lettuce)"></i> Verde</span>
+        <span><i class="dot" style="background:var(--white);border:1px solid #ddd"></i> Branco</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== CONFIGURAÇÕES ====================
+    const WHATSAPP_NUMBER = '5566992470493'; // DDI+DDD+número (ajuste se necessário)
+
+    const catalog = {
+      Lanches: [
+        {id:'madrugordao', title:'Madrugordão', desc:'Pão, 2 carnes 100g, bacon, cheddar duplo, ovo, alface, tomate, molho da casa.', price: 28.9},
+        {id:'big-bacon', title:'Big Bacon', desc:'Carne 150g, bacon crocante, queijo, maionese verde.', price: 24.9},
+        {id:'x-salada', title:'X-Salada', desc:'Carne 100g, queijo, alface, tomate e maionese.', price: 18.9},
+      ],
+      Bebidas: [
+        {id:'guarana-1l', title:'Guaraná 1L', desc:'Garrafão gelado', price: 9.9},
+        {id:'refri-lata', title:'Refrigerante Lata', desc:'Coca/Guaraná/Fanta (consulte sabores)', price: 6.0},
+        {id:'agua', title:'Água 500ml', desc:'Sem gás', price: 3.5},
+      ],
+      Porções: [
+        {id:'batata-p', title:'Batata P 250g', desc:'Batata palito crocante', price: 12.9},
+        {id:'batata-g', title:'Batata G 500g', desc:'Serve 2-3 pessoas', price: 19.9},
+        {id:'nuggets', title:'Nuggets 10un', desc:'Frango empanado', price: 17.9},
+      ]
+    };
+
+    // Builder (Monte seu lanche)
+    const builder = {
+      base:{ label:'Carne', type:'radio', required:true, options:[
+        {id:'1carne', name:'1 carne (100g)', price:12.0},
+        {id:'2carnes', name:'2 carnes (2x100g)', price:20.0},
+        {id:'frango', name:'Frango desfiado', price:12.0},
+      ]},
+      queijo:{ label:'Queijo', type:'radio', required:true, options:[
+        {id:'mussarela', name:'Mussarela', price:4.0},
+        {id:'cheddar', name:'Cheddar', price:5.0},
+        {id:'prato', name:'Queijo prato', price:4.5},
+      ]},
+      pao:{ label:'Pão', type:'radio', required:true, options:[
+        {id:'tradicional', name:'Tradicional', price:0},
+        {id:'australiano', name:'Australiano', price:2.5},
+      ]},
+      molhos:{ label:'Molhos', type:'checkbox', options:[
+        {id:'maionese', name:'Maionese da casa', price:0},
+        {id:'barbecue', name:'Barbecue', price:0},
+        {id:'mostarda', name:'Mostarda e mel', price:0},
+      ]},
+      salada:{ label:'Salada', type:'checkbox', options:[
+        {id:'alface', name:'Alface', price:0},
+        {id:'tomate', name:'Tomate', price:0},
+        {id:'cebola', name:'Cebola', price:0},
+        {id:'picles', name:'Picles', price:1.5},
+      ]},
+      adicionais:{ label:'Adicionais', type:'checkbox', options:[
+        {id:'bacon', name:'Bacon', price:5.0},
+        {id:'ovo', name:'Ovo', price:3.0},
+        {id:'calabresa', name:'Calabresa', price:4.0},
+        {id:'catupiry', name:'Requeijão Catupiry®', price:4.5},
+        {id:'carneExtra', name:'Carne extra', price:8.0},
+      ]}
+    };
+
+    // ==================== ESTADO ====================
+    const state = {cart:[], tab:Object.keys(catalog)[0]};
+
+    // ==================== RENDER TABS ====================
+    const tabsEl = document.getElementById('tabs');
+    function renderTabs(){
+      tabsEl.innerHTML = '';
+      Object.keys(catalog).forEach(key=>{
+        const b = document.createElement('button');
+        b.className = 'tab' + (state.tab===key?' active':'');
+        b.textContent = key;
+        b.addEventListener('click',()=>{state.tab=key;renderLists();renderTabs()});
+        tabsEl.appendChild(b);
+      })
+    }
+
+    // ==================== RENDER LISTS ====================
+    const listsEl = document.getElementById('lists');
+    function money(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+
+    function renderLists(){
+      listsEl.innerHTML = '';
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      catalog[state.tab].forEach(p=>{
+        const card = document.createElement('div');
+        card.className = 'item';
+        card.innerHTML = `
+          <div class="thumb"><span style="font-size:42px">🍔</span></div>
+          <div class="body">
+            <div class="title">${p.title}</div>
+            <div class="desc">${p.desc}</div>
+            <div class="bottom">
+              <div class="price">${money(p.price)}</div>
+              <button class="btn primary">Adicionar</button>
+            </div>
+          </div>`;
+        card.querySelector('button').addEventListener('click',()=>addToCart({id:p.id,title:p.title,price:p.price,qty:1,notes:''}))
+        grid.appendChild(card);
+      })
+      listsEl.appendChild(grid);
+    }
+
+    // ==================== RENDER BUILDER ====================
+    const builderEl = document.getElementById('builder');
+    function renderBuilder(){
+      builderEl.innerHTML = '';
+      Object.entries(builder).forEach(([key,conf])=>{
+        const box = document.createElement('div');
+        box.className = 'group';
+        box.innerHTML = `<h4>${conf.label}</h4>`;
+        const wrap = document.createElement('div');
+        wrap.className = 'options';
+        conf.options.forEach(opt=>{
+          const id = key+'_'+opt.id;
+          const pill = document.createElement('label');
+          pill.className = 'pill';
+          pill.innerHTML = `<input ${conf.type==='checkbox'?'type="checkbox"':'type="radio" name="'+key+'"'} id="${id}" value="${opt.name}" data-price="${opt.price}"> ${opt.name} ${opt.price?`<small style="opacity:.7">(+ ${money(opt.price)})</small>`:''}`;
+          wrap.appendChild(pill);
+        })
+        box.appendChild(wrap);
+        builderEl.appendChild(box);
+      })
+    }
+
+    // ==================== CART ====================
+    const cartEl = document.getElementById('cart');
+    const totalEl = document.getElementById('total');
+    const itemsCountEl = document.getElementById('itemsCount');
+
+    function addToCart(item){
+      const exist = state.cart.find(x=>x.title===item.title && JSON.stringify(x.options||[])===JSON.stringify(item.options||[]));
+      if(exist){exist.qty += item.qty}
+      else state.cart.push(item);
+      renderCart();
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function changeQty(index,delta){
+      const it = state.cart[index];
+      it.qty += delta; if(it.qty<=0) state.cart.splice(index,1);
+      renderCart();
+    }
+
+    function renderCart(){
+      cartEl.innerHTML = '';
+      let total = 0;
+      state.cart.forEach((it,idx)=>{
+        const line = document.createElement('div');
+        line.className = 'line';
+        const optionsText = it.options?.length ? `\n— ${it.options.map(o=>o.name).join(', ')}` : '';
+        const notesText = it.notes? `\nObs.: ${it.notes}`:'';
+        line.innerHTML = `
+          <div style="flex:1">
+            <div style="font-weight:800">${it.title}</div>
+            <div style="font-size:.85rem;color:#d1d5db;white-space:pre-line">${optionsText}${notesText}</div>
+          </div>
+          <div class="qty">
+            <button aria-label="diminuir" onclick="changeQty(${idx},-1)">−</button>
+            <span>${it.qty}</span>
+            <button aria-label="aumentar" onclick="changeQty(${idx},1)">+</button>
+          </div>
+          <div style="font-weight:800">${money(it.price*it.qty)}</div>
+        `;
+        total += it.price*it.qty;
+        cartEl.appendChild(line);
+      })
+      totalEl.textContent = money(total);
+      itemsCountEl.textContent = `${state.cart.length} ${state.cart.length===1?'item':'itens'}`;
+    }
+
+    // Botão de adicionar do builder
+    document.getElementById('addCustom').addEventListener('click',()=>{
+      // validar obrigatórios
+      const chosen = {};
+      for(const key of ['base','queijo','pao']){
+        const r = document.querySelector(`input[name=${key}]:checked`);
+        if(!r){alert('Selecione: '+builder[key].label);return}
+        chosen[key] = {name:r.value, price: Number(r.dataset.price)};
+      }
+      const checkList = ['molhos','salada','adicionais'].flatMap(key=>
+        [...document.querySelectorAll(`#builder input[id^=${key}_]:checked`)].map(i=>({group:key,name:i.value, price:Number(i.dataset.price)}))
+      );
+      const options = [chosen.base, chosen.queijo, chosen.pao, ...checkList];
+      const price = options.reduce((s,o)=>s+o.price,0);
+      addToCart({id:'custom', title:'Madrugordão Personalizado', price, qty:1, options});
+    })
+
+    // ==================== CHECKOUT / WHATSAPP ====================
+    const checkout = document.getElementById('checkout');
+    const modoSel = document.getElementById('modo');
+    const enderecoBox = document.getElementById('enderecoBox');
+    const trocoBox = document.getElementById('trocoBox');
+
+    modoSel.addEventListener('change',()=>{
+      enderecoBox.style.display = modoSel.value==='Entrega' ? 'block':'none';
+    })
+
+    checkout.pagamento.addEventListener('change',()=>{
+      trocoBox.style.display = checkout.pagamento.value==='Dinheiro' ? 'block':'none';
+    })
+
+    checkout.addEventListener('submit',(e)=>{
+      e.preventDefault();
+      if(state.cart.length===0){alert('Seu carrinho está vazio. Adicione itens antes de finalizar.');return}
+      const data = Object.fromEntries(new FormData(checkout).entries());
+
+      const linhas = [];
+      linhas.push('*Madrugordão Lanches — Novo Pedido*');
+      linhas.push('');
+      state.cart.forEach((it,i)=>{
+        const opt = it.options?.length?`\n  • ${it.options.map(o=>o.name).join(', ')}`:'';
+        const obs = it.notes?`\n  Obs.: ${it.notes}`:'';
+        linhas.push(`${i+1}) ${it.qty}x ${it.title} — ${money(it.price*it.qty)}${opt}${obs}`);
+      });
+      const total = document.getElementById('total').textContent;
+      linhas.push('');
+      linhas.push(`*Total:* ${total}`);
+      linhas.push('');
+      linhas.push(`*Nome:* ${data.nome||''}`);
+      if(data.telefone) linhas.push(`*Telefone:* ${data.telefone}`);
+      linhas.push(`*Modo:* ${data.modo}`);
+      if(data.modo==='Entrega' && data.endereco) linhas.push(`*Endereço:* ${data.endereco}`);
+      linhas.push(`*Pagamento:* ${data.pagamento}`);
+      if(data.pagamento==='Dinheiro' && data.troco) linhas.push(`*Troco para:* ${data.troco}`);
+      linhas.push('');
+      linhas.push('Aguardando confirmação ✅');
+
+      const text = encodeURIComponent(linhas.join('\n'));
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+      window.open(url,'_blank');
+    })
+
+    // ==================== INIT ====================
+    renderTabs();
+    renderLists();
+    renderBuilder();
+    renderCart();
+  </script>
+</body>
+</html>
